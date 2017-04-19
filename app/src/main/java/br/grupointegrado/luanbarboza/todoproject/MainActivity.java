@@ -9,16 +9,40 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import br.grupointegrado.luanbarboza.todoproject.DB.DataBase;
+import br.grupointegrado.luanbarboza.todoproject.model.ToDo;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ListView lvToDo;
+    private DataBase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
+
+        lvToDo = (ListView) findViewById(R.id.lvTodo);
+
+        db = new DataBase(this);
+
+    }
+    @Override
+       protected void onResume() {
+        super.onResume();
+
+                        List<ToDo> toDos = db.getTodos();
+        ArrayAdapter<ToDo> la =
+                new ArrayAdapter<ToDo>(this, android.R.layout.simple_list_item_1, toDos);
+
+               lvToDo.setAdapter(la);
 
     }
 
@@ -27,28 +51,8 @@ public class MainActivity extends AppCompatActivity {
 //        Snackbar.make(v, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show();
 
-        startActivity(new Intent(this, RegisterToDoActivity.class));
+        Intent i = new Intent(this, RegisterToDoActivity.class);
+                startActivity(i);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }
